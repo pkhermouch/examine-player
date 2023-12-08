@@ -1,2 +1,12 @@
 [ ] Add icon file for project
 [ ] Add readme
+
+[ ] Add interface widgets
+[ ] Create functions to read and write to Redis
+[ ] Timer to periodically refresh value in Redis
+[ ] Handle client state transitions -- logging in and out, etc
+[ ] Update value in Redis on value change in widget
+[ ] Add menu options on players to examine
+
+Be sure to
+[ ] Truncate values before sending to API
