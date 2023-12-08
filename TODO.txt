@@ -1,0 +1,2 @@
+[ ] Add icon file for project
+[ ] Add readme
