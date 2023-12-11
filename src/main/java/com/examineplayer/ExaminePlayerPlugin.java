@@ -9,6 +9,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
@@ -42,6 +43,19 @@ public class ExaminePlayerPlugin extends Plugin
 		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
 		{
 			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
+		}
+		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN)
+		{
+			log.info(String.format("Login screen - Examine text: %s", config.getExamineText()));
+		}
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (event.getGroup().equals("examineplayer"))
+		{
+			log.info(String.format("Config changed! Examine text: %s", config.getExamineText()));
 		}
 	}
 
