@@ -4,7 +4,7 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("example")
+@ConfigGroup("examineplayer")
 public interface ExaminePlayerConfig extends Config
 {
 	@ConfigItem(
@@ -16,4 +16,21 @@ public interface ExaminePlayerConfig extends Config
 	{
 		return "Hello";
 	}
+
+	@ConfigItem(
+			keyName = "examineText",
+			name = "Examine text",
+			description = "Your player's examine text. Max 140 characters"
+	)
+	default String getExamineText()
+	{
+		return "";
+	}
+
+	@ConfigItem(
+			keyName = "examineText",
+			name = "",
+			description = ""
+	)
+	void setExamineText(String key);
 }
