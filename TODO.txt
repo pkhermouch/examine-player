@@ -2,11 +2,11 @@
 [ ] Add readme
 [ ] Add plugin descriptor tags
 
-[ ] Add interface widgets
+[*] Add interface widgets
 Hidden items field on https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/grounditems/GroundItemsConfig.java as an example
---> How do we ensure the value gets truncated on update? Any way to overwrite the setter method? Just define it manually?
---> If we can't create a button, how do we get an update when the value is changed? See https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/grounditems/GroundItemsPlugin.java#L215
-[ ] Create functions to read and write to Redis
+  [ ] How do we ensure the value gets truncated on update? Any way to overwrite the setter method? Just define it manually?
+  [*] If we can't create a button, how do we get an update when the value is changed? See https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/grounditems/GroundItemsPlugin.java#L215
+[*] Create functions to read and write to Redis
 [ ] Timer to periodically refresh value in Redis
 [ ] Handle client state transitions -- logging in and out, etc
 [ ] Update value in Redis on value change in widget
