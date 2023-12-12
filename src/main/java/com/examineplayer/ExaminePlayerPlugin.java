@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.Player;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.chat.ChatClient;
 import net.runelite.client.config.ConfigManager;
@@ -21,7 +22,8 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Examine Player"
+	name = "Examine Player",
+	enabledByDefault = false
 )
 public class ExaminePlayerPlugin extends Plugin
 {
@@ -57,6 +59,7 @@ public class ExaminePlayerPlugin extends Plugin
 		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
 		{
 			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
+			setExamineText();
 		}
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN)
 		{
@@ -71,8 +74,14 @@ public class ExaminePlayerPlugin extends Plugin
 		{
 			if (event.getKey().equals("examineText")) {
 				log.info(String.format("Config changed! Examine text: %s", config.getExamineText()));
+				setExamineText();
 			} else if (event.getKey().equals("logPlayerExamineText")) {
-				log.info(String.format("Current player text: %s", getExamineText(client.getLocalPlayer().getName())));
+				final Player player = client.getLocalPlayer();
+				if (player == null || player.getName() == null) {
+					log.info("No local player available");
+				} else {
+					log.info(String.format("Current player text: %s", getExamineText(player.getName())));
+				}
 			} else if (event.getKey().equals("syncPlayerExamineText")) {
 				setExamineText();
 				log.info("Synced current player's examine text");
@@ -86,7 +95,11 @@ public class ExaminePlayerPlugin extends Plugin
 		// slayer information.
 		// Add a prefix to the player name so that our Redis keys are namespaced and won't ever collide with data
 		// written by the Slayer plugin.
-		final String playerName = client.getLocalPlayer().getName();
+		final Player localPlayer = client.getLocalPlayer();
+		if (localPlayer == null || localPlayer.getName() == null) {
+			return;
+		}
+		final String playerName = localPlayer.getName();
 		final String examineText = config.getExamineText();
 		if (examineText.isEmpty() || examineText.isBlank()) {
 			return;
