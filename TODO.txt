@@ -12,11 +12,12 @@ Hidden items field on https://github.com/runelite/runelite/blob/master/runelite-
 [ ] Timer to periodically refresh value in Redis
 [*] Handle client state transitions -- logging in and out, etc
 [*] Update value in Redis on value change in widget
-[ ] Add menu options on players to examine
+[*] Add menu options on players to examine
 
 Be sure to
 [*] Truncate values before sending to API
 [*] Error handling for when a player's text is absent or fails
+[ ] Remove example stuff
 
 Caveats
 --will not scale well with current expiration time of 2 minutes
