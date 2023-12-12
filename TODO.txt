@@ -15,4 +15,12 @@ Hidden items field on https://github.com/runelite/runelite/blob/master/runelite-
 [ ] Add menu options on players to examine
 
 Be sure to
-[ ] Truncate values before sending to API
+[*] Truncate values before sending to API
+[*] Error handling for when a player's text is absent or fails
+
+Caveats
+--will not scale well with current expiration time of 2 minutes
+--piggybacking off of existing Slayer endpoint which isn't great
+--Caching of slayer tasks on API side means that changes to examine text won't be reflected for 2 minutes
+--Slayer endpoint: validation requires only alphanum, single quote, space, hyphen
+--Slayer endpoint: max length is 50
