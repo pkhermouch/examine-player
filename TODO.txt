@@ -17,7 +17,7 @@ Hidden items field on https://github.com/runelite/runelite/blob/master/runelite-
 Be sure to
 [*] Truncate values before sending to API
 [*] Error handling for when a player's text is absent or fails
-[ ] Remove example stuff
+[*] Remove example stuff
 
 Caveats
 --will not scale well with current expiration time of 2 minutes

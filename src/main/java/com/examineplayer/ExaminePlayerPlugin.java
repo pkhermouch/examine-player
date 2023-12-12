@@ -68,12 +68,7 @@ public class ExaminePlayerPlugin extends Plugin
 	{
 		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
 		{
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
 			setExamineText();
-		}
-		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN)
-		{
-			log.info(String.format("Login screen - Examine text: %s", config.getExamineText()));
 		}
 	}
 
