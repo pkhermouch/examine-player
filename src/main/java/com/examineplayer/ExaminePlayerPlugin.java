@@ -16,6 +16,7 @@ import net.runelite.http.api.chat.Task;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
@@ -25,6 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ExaminePlayerPlugin extends Plugin
 {
 	private final String REDIS_KEY_PREFIX = "examineplayer:";
+	private final Integer MAX_TEXT_LENGTH = 50;
 	@Inject
 	private Client client;
 
@@ -67,7 +69,14 @@ public class ExaminePlayerPlugin extends Plugin
 	{
 		if (event.getGroup().equals("examineplayer"))
 		{
-			log.info(String.format("Config changed! Examine text: %s", config.getExamineText()));
+			if (event.getKey().equals("examineText")) {
+				log.info(String.format("Config changed! Examine text: %s", config.getExamineText()));
+			} else if (event.getKey().equals("logPlayerExamineText")) {
+				log.info(String.format("Current player text: %s", getExamineText(client.getLocalPlayer().getName())));
+			} else if (event.getKey().equals("syncPlayerExamineText")) {
+				setExamineText();
+				log.info("Synced current player's examine text");
+			}
 		}
 	}
 
@@ -78,21 +87,25 @@ public class ExaminePlayerPlugin extends Plugin
 		// Add a prefix to the player name so that our Redis keys are namespaced and won't ever collide with data
 		// written by the Slayer plugin.
 		final String playerName = client.getLocalPlayer().getName();
-		final String examineText = config.getExamineText().substring(0, 140);
+		final String examineText = config.getExamineText();
+		if (examineText.isEmpty() || examineText.isBlank()) {
+			return;
+		}
+		final String trimmedText = examineText.length() > MAX_TEXT_LENGTH ? examineText.substring(0, MAX_TEXT_LENGTH) : examineText;
 		executor.execute(() ->
 		{
 			try
 			{
 				chatClient.submitTask(
 						String.format("%s%s", REDIS_KEY_PREFIX, playerName),
-						examineText,
+						trimmedText,
 						50,
 						100,
 						"Atlantis");
 			}
 			catch (Exception ex)
 			{
-				log.warn("Unable to set examine text", ex);
+				log.warn("Unable to set examine text");
 			}
 		});
 	}
@@ -104,11 +117,28 @@ public class ExaminePlayerPlugin extends Plugin
 			task = chatClient.getTask(keyName);
 		}
 		catch (IOException e) {
-			log.warn(String.format("Unable to get examine text for player %s", playerName), e);
-			return "";
+			log.warn(String.format("Unable to get examine text for player %s", playerName));
+			return getTextNotFoundMessage();
+		}
+
+		if (task == null || task.getTask() == null || task.getTask().isEmpty()) {
+			return getTextNotFoundMessage();
 		}
 
 		return task.getTask();
+	}
+
+	private String getTextNotFoundMessage() {
+		int val = new Random().nextInt(3);
+		switch (val) {
+			case 0:
+				return "After observing the player closely, you don't notice anything of interest.";
+			case 1:
+				return "Upon close examination, you are able to deduce little of note about the player.";
+			case 2:
+			default:
+				return "You squint and strain your ears, but the player exhibits no distinguishing characteristics or behavior.";
+		}
 	}
 
 	@Provides

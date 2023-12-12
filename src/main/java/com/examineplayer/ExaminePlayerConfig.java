@@ -33,4 +33,26 @@ public interface ExaminePlayerConfig extends Config
 			description = ""
 	)
 	void setExamineText(String key);
+
+	@ConfigItem(
+			keyName = "logPlayerExamineText",
+			name = "Log player examine text",
+			description = "Toggle to log the current player's examine text"
+	)
+	default boolean logPlayerExamineText()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+			keyName = "syncPlayerExamineText",
+			name = "Sync player examine text",
+			description = "Toggle to sync the current player's examine text"
+	)
+	default boolean syncPlayerExamineText()
+	{
+		return false;
+	}
+
+
 }
