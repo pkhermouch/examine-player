@@ -2,20 +2,20 @@ package com.examineplayer;
 
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.Player;
+import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.chat.ChatClient;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.http.api.chat.Task;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,6 +29,7 @@ public class ExaminePlayerPlugin extends Plugin
 {
 	private final String REDIS_KEY_PREFIX = "examineplayer:";
 	private final Integer MAX_TEXT_LENGTH = 50;
+	private final String EXAMINE_MENU_OPTION = "Examine";
 	@Inject
 	private Client client;
 
@@ -41,16 +42,25 @@ public class ExaminePlayerPlugin extends Plugin
 	@Inject
 	private ScheduledExecutorService executor;
 
+	@Inject
+	private Provider<MenuManager> menuManager;
+
 	@Override
 	protected void startUp() throws Exception
 	{
-		log.info("Example started!");
+		if (client != null)
+		{
+			menuManager.get().addPlayerMenuItem(EXAMINE_MENU_OPTION);
+		}
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		log.info("Example stopped!");
+		if (client != null)
+		{
+			menuManager.get().removePlayerMenuItem(EXAMINE_MENU_OPTION);
+		}
 	}
 
 	@Subscribe
@@ -86,6 +96,23 @@ public class ExaminePlayerPlugin extends Plugin
 				setExamineText();
 				log.info("Synced current player's examine text");
 			}
+		}
+	}
+
+	@Subscribe
+	public void onMenuOptionClicked(MenuOptionClicked event)
+	{
+		if (event.getMenuAction() == MenuAction.RUNELITE_PLAYER && event.getMenuOption().equals(EXAMINE_MENU_OPTION))
+		{
+			Player player = event.getMenuEntry().getPlayer();
+			if (player == null)
+			{
+				return;
+			}
+
+			String target = player.getName();
+			String examineText = getExamineText(target);
+			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", examineText, null);
 		}
 	}
 
