@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.chat.ChatClient;
 import net.runelite.client.config.ConfigManager;
@@ -45,9 +46,12 @@ public class ExaminePlayerPlugin extends Plugin
 	@Inject
 	private Provider<MenuManager> menuManager;
 
+	private int tickCounter = 0;
+
 	@Override
 	protected void startUp() throws Exception
 	{
+		tickCounter = 0;
 		if (client != null)
 		{
 			menuManager.get().addPlayerMenuItem(EXAMINE_MENU_OPTION);
@@ -78,7 +82,6 @@ public class ExaminePlayerPlugin extends Plugin
 		if (event.getGroup().equals("examineplayer"))
 		{
 			if (event.getKey().equals("examineText")) {
-				log.info(String.format("Config changed! Examine text: %s", config.getExamineText()));
 				setExamineText();
 			} else if (event.getKey().equals("logPlayerExamineText")) {
 				final Player player = client.getLocalPlayer();
@@ -91,6 +94,18 @@ public class ExaminePlayerPlugin extends Plugin
 				setExamineText();
 				log.info("Synced current player's examine text");
 			}
+		}
+	}
+
+	@Subscribe
+	public void onGameTick(GameTick tick) {
+		// Refresh the examine text of this player every 117 seconds, since the Redis key expires in 120 seconds.
+		final int REFRESH_FREQUENCY = ((120 - 3) * 10) / 6;
+		tickCounter++;
+
+		if (tickCounter % REFRESH_FREQUENCY == 0) {
+			log.debug("Refreshing local player examine text");
+			setExamineText();
 		}
 	}
 
@@ -152,7 +167,7 @@ public class ExaminePlayerPlugin extends Plugin
 			task = chatClient.getTask(keyName);
 		}
 		catch (IOException e) {
-			log.warn(String.format("Unable to get examine text for player %s", playerName));
+			log.debug(String.format("Unable to get examine text for player %s", playerName));
 			return getTextNotFoundMessage();
 		}
 
