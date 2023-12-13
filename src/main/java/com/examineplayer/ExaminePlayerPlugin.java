@@ -82,21 +82,9 @@ public class ExaminePlayerPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (event.getGroup().equals("examineplayer"))
+		if (event.getGroup().equals("examineplayer") && event.getKey().equals("examineText"))
 		{
-			if (event.getKey().equals("examineText")) {
-				setExamineText();
-			} else if (event.getKey().equals("logPlayerExamineText")) {
-				final Player player = client.getLocalPlayer();
-				if (player == null || player.getName() == null) {
-					log.info("No local player available");
-				} else {
-					log.info(String.format("Current player text: %s", getExamineText(player.getName())));
-				}
-			} else if (event.getKey().equals("syncPlayerExamineText")) {
-				setExamineText();
-				log.info("Synced current player's examine text");
-			}
+			setExamineText();
 		}
 	}
 
