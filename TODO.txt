@@ -1,4 +1,4 @@
-[ ] Add icon file for project
+[*] Add icon file for project
 [ ] Add readme
 [*] Add plugin descriptor tags
 
