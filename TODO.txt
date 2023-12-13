@@ -1,5 +1,5 @@
 [*] Add icon file for project
-[ ] Add readme
+[*] Add readme
 [*] Add plugin descriptor tags
 
 [*] Add interface widgets
