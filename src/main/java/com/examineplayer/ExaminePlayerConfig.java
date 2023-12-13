@@ -10,7 +10,7 @@ public interface ExaminePlayerConfig extends Config
 	@ConfigItem(
 			keyName = "examineText",
 			name = "Examine text",
-			description = "Your player's examine text. Max 50 characters"
+			description = "Your player's examine text. Max 50 characters. Only letters, numbers, spaces, hyphens and commas are allowed."
 	)
 	default String getExamineText()
 	{

@@ -9,7 +9,7 @@ Hidden items field on https://github.com/runelite/runelite/blob/master/runelite-
 [*] Create functions to read and write to Redis
 --write: on login, every so often, when config updates
 --read: when examine menu option clicked
-[ ] Timer to periodically refresh value in Redis
+[*] Timer to periodically refresh value in Redis
 [*] Handle client state transitions -- logging in and out, etc
 [*] Update value in Redis on value change in widget
 [*] Add menu options on players to examine
