@@ -1,6 +1,6 @@
 [ ] Add icon file for project
 [ ] Add readme
-[ ] Add plugin descriptor tags
+[*] Add plugin descriptor tags
 
 [*] Add interface widgets
 Hidden items field on https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/grounditems/GroundItemsConfig.java as an example

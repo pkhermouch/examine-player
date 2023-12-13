@@ -24,6 +24,9 @@ import java.util.concurrent.ScheduledExecutorService;
 @Slf4j
 @PluginDescriptor(
 	name = "Examine Player",
+	configName = "examineplayer",
+	description = "A Runelite plugin that allows players to set customizable examine text and examine other players.",
+	tags = {"examine"},
 	enabledByDefault = false
 )
 public class ExaminePlayerPlugin extends Plugin
